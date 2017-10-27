@@ -63,6 +63,6 @@ $coinnum = C::t('common_member_count')->fetch($_G['uid'])['extcredits1'];
 require_once $file;
 require_once template('interconnection:template');
 
-mysqli_close($connect);
+mysqli_close($database);
 
 ?>
