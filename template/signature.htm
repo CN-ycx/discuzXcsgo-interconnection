@@ -1,0 +1,48 @@
+<style>
+.wp {
+	width:880px !important;
+}
+</style>
+<ul class="tb cl">
+    <li><a href="plugin.php?id=interconnection&mod=main">关联数据</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=credits">信用点兑换</a></li>
+    <li class="a"><a href="plugin.php?id=interconnection&mod=signature">更改游戏签名</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=onlinestore">在线商店(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=authorized">Autoorized(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=couples">Couples(BETA)</a></li>
+</ul>
+<ul class="creditl mtm bbda cl">
+    <p>&nbsp;</p>
+    <p>当前信用点:  <strong>{$coinnum}</strong></p>
+    <p>当前游戏签名:  <strong>{$oldsign}</strong></p>
+    <p>&nbsp;</p>
+</ul>
+<form action="plugin.php" method="get" id="transform">
+    <input type="hidden" name="id" value="interconnection:signature" />
+    </br>
+    <p id="sohwtext2" class="d"> 支持颜色代码： &#123;白&#125; &#123;红&#125; &#123;粉&#125; &#123;绿&#125; &#123;黄&#125; &#123;亮绿&#125; &#123;亮红&#125; &#123;灰&#125; &#123;褐&#125; &#123;橙&#125; &#123;紫&#125; &#123;亮蓝&#125; &#123;蓝&#125; </p>
+    <p id="showtext2" class="d"> 更新游戏签名信息需要500信用点 </p>
+    <p id="showtext2" class="d"> 系统会自动屏蔽不兼容的符号/代码 </p>
+    <p id="showtext2" class="d"> &nbsp; </p>
+    <table class="tfm" id="profilelist" cellspacing="0" cellpadding="0">
+        <tbody>
+            <tr>
+                <th width="20">新签名</th>
+                <td width="400">
+                <input name="newsignature" id="newsignature" class="px" value="新签名" style="width:45em;" type="text" />
+                </td>
+                <td class="p" width="11">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="p">&nbsp;</td>
+                <td colspan="2">
+                <!--{if $coinnum >= 500}-->
+                <input type="submit" class="pn pnc" value=" 更新签名 " />
+                <!--{else}-->
+                <input type="submit" disabled="disabled" class="pn pnc" value=" 更新签名(信用点不足500) " />
+                <!--{/if}-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>

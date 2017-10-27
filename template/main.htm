@@ -1,0 +1,51 @@
+<style>
+.wp {
+	width:880px !important;
+}
+</style>
+<ul class="tb cl">
+    <li class="a"><a href="plugin.php?id=interconnection&mod=main">关联数据</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=credits">信用点兑换</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=signature">更改游戏签名</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=onlinestore">在线商店(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=authorized">Autoorized(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=couples">Couples(BETA)</a></li>
+</ul>
+<div class="main">
+    <h1 class="mt">我的 Steam 帐号</h1>
+    <table cellspacing="0" cellpadding="0" class="dt mtm">
+        <caption>
+            <h2 class="mbm xs2">Steam 帐号信息</h2>
+        </caption>
+        <tbody>
+            <tr>
+                <td>Steam昵称</td>
+                <td>{$dzusers[name]}</td>
+            </tr>
+            <tr>
+                <td>Steam状态</td>
+                <td>{$dzusers[current]}</td>
+            </tr>
+            <tr>
+                <td>Steam等级</td>
+                <td>{$dzusers[level]}</td>
+            </tr>
+            <tr>
+                <td>Steam勋章</td>
+                <td>{$dzusers[badges]}</td>
+            </tr>
+            <tr>
+                <td>SteamID64</td>
+                <td>{$steam64}</td>
+            </tr>
+            <tr>
+                <td>SteamID32</td>
+                <td>{$steam32}</td>
+            </tr>
+            <tr>
+                <td>Steam主页</td>
+                <td><a title='Steam Profile' href='https://steamcommunity.com/profiles/{$steam64}'>https://steamcommunity.com/profiles/{$steam64}</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

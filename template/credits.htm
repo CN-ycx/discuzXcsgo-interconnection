@@ -1,5 +1,7 @@
-<!--{if $storeid >= 1}-->
 <style>
+.wp {
+	width:880px !important;
+}
 ::-webkit-input-placeholder { /* WebKit browsers */
 　　color:#ccc;
 }
@@ -36,23 +38,25 @@
 }
 </style>
 <ul class="tb cl">
-    <li class="a"><a href="home.php?mod=spacecp&ac=plugin&id=interconnection:credits">信用点兑换</a></li>
-    <li><a href="home.php?mod=spacecp&ac=plugin&id=interconnection:signature">更改游戏签名</a></li>
-    <li><a href="home.php?mod=spacecp?ac=plugin&id=interconnection:onlinestore">在线商店(BETA)</a></li>
-    <li><a href="home.php?mod=spacecp?ac=plugin&id=interconnection:authorized">Autoorized(BETA)</a></li>
-    <li><a href="home.php?mod=spacecp?ac=plugin&id=interconnection:couples">Couples(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=main">关联数据</a></li>
+    <li class="a"><a href="plugin.php?id=interconnection&mod=credits">信用点兑换</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=signature">更改游戏签名</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=onlinestore">在线商店(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=authorized">Autoorized(BETA)</a></li>
+    <li><a href="plugin.php?id=interconnection&mod=couples">Couples(BETA)</a></li>
 </ul>
 <ul class="creditl mtm bbda cl">
-    <li>当前 <em>论坛</em> 信用点:  {$coinnum}</li>
-    <li>当前 <em>CSGO</em> 信用点:  {$credits} </li>
-    <li><em>StoreID</em>:  {$storeid} </li>
+    <p>&nbsp;</p>
+    <li>当前 <strong>论坛</strong> 信用点:  {$coinnum}</li>
+    <li>当前 <strong>CSGO</strong> 信用点:  {$credits} </li>
+    <li><strong>StoreID</strong>:  {$storeid} </li>
     <li>物品数量:  {$itemnum} </li>
+    <p>&nbsp;</p>
 </ul>
 <form action="plugin.php" method="get" id="transform">
-    <input type="hidden" name="id" value="interconnection:credits_do" />
+    <input type="hidden" name="id" value="interconnection:credits" />
     </br>
     <p id="sohwtext2" class="d"> 如果正在游戏中，网页上显示的积分可能与游戏中显示不同步，重进游戏即可。</p>
-    <p id="sohwtext3" class="d"><em><span style="color:#E53333;"> 请珍惜你的CAT信用等级, 拒绝来历不明的交易, 转赠.  CAT封禁后不予解封</span></em></p>
     <table class="tfm" id="profilelist" cellspacing="0" cellpadding="0">
         <br />
         <tbody>
@@ -80,73 +84,31 @@
     </table>
 </form>
 <div class="memberlist">
-                <h2>
-                    最近游戏内信用点变更记录 ({$count}条)
-                </h2>
-            </div>
+    <h2>
+        最近游戏内信用点变更记录 ({$count}条)
+    </h2>
+</div>
 <div class="box_div" id="recordlist" style="padding-top: 0px;padding-right: 0px;margin-bottom: 50px;">
     <table cellspacing="0" cellpadding="0" class="dt ">
-  <tbody>
-      <tr>
-<th width="5"></th>
-<th width="40"><b>流水号</b></th>
-<th width="40"><b>时间</b></th>
-<th width="40"><b>交易</b></th>
-<th width="40"><b>余额</b></th>
-<th width="60"><b>明细</b></th>
-</tr>
-<!--{loop $rows $row2}-->
-    <tr>
-        <td> </td>
-        <td>{$row2['tkid']}</td>
-        <td>{$row2['date']}</td>
-        <td>{$row2['difference']}</td>
-        <td>{$row2['credits']}</td>
-        <td>{$row2['reason']}</td>
-    </tr>
-<!--{/loop}-->
-</tbody>
-</table>
-    </div>
-<script src="https://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
-<script>
-jQuery.noConflict();
-function ajaxSubmit(frm, fn) {
-    var dataPara = getFormJson(frm);
-    jQuery.ajax({
-        url: frm.action,
-        type: frm.method,
-        data: dataPara,
-        success: fn
-    });
-}
-function getFormJson(frm) {
-    var o = {};
-    var a = jQuery(frm).serializeArray();
-    jQuery.each(a, function () {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-}
-jQuery(document).ready(function(){
-    jQuery('#transform').bind('submit', function(){
-        ajaxSubmit(this, function(data){
-            alert(data);
-            location.reload();
-        });
-        return false;
-    });
-});
-</script>
-<!--{elseif 1 > $store}-->
-请先进入一次服务器
-<!--{else}-->
-没有绑定Steam
-<!--{/if}-->
+        <tbody>
+            <tr>
+                <th width="5"></th>
+                <th width="40"><b>流水号</b></th>
+                <th width="40"><b>时间</b></th>
+                <th width="40"><b>交易</b></th>
+                <th width="40"><b>余额</b></th>
+                <th width="60"><b>明细</b></th>
+            </tr>
+            <!--{loop $rows $row2}-->
+            <tr>
+                <td> </td>
+                <td>{$row2['tkid']}</td>
+                <td>{$row2['date']}</td>
+                <td>{$row2['difference']}</td>
+                <td>{$row2['credits']}</td>
+                <td>{$row2['reason']}</td>
+            </tr>
+            <!--{/loop}-->
+        </tbody>
+    </table>
+</div>
