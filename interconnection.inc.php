@@ -28,6 +28,7 @@ $database = mysqli_connect($db_host, $db_user, $db_pswd, $db_name);
 if($dzusers['steamID64']){
 
     $dzusers['name'] = htmlspecialchars($dzusers['steamNickname']);
+    $dzusers['avatar_full'] = str_replace(".jpg", "_full.jpg", $dzusers['avatar']);
 	$steam64 = $dzusers['steamID64'];
     $steam32 = SteamID64ToSteamID32($steam64, true);
     $steamid = SteamID64ToSteamID32($steam64, false);
