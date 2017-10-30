@@ -41,7 +41,7 @@ function UpdateSteamProfiles($database, $apikey, $steamid, $uid)
 	curl_close($curl);
     
     $json = json_decode($data, true);
-    
+
     foreach($json as $key => $value)
 	{
 		foreach($value['players'] as $k => $v)
@@ -49,16 +49,34 @@ function UpdateSteamProfiles($database, $apikey, $steamid, $uid)
 			$array['nick'] = $v['personaname'];
 			$array['steam'] = $v['steamid'];
 			$array['avatar'] = $v['avatar'];
-			$array['visible'] = $v['communityvisibilitystate'];
-			if($array['visible'] == 3)
-			{
-				$array['ingame'] = $v['gameextrainfo'];
-				$array['online'] = $v['personastate'];
-				$array['gameid'] = $v['gameid'];
-			}
+            $array['state'] = "Offline";
+            $array['gameid'] = 0;
+
+			if(isset($v['gameextrainfo'])){
+                $array['state'] = $v['gameextrainfo'];
+                $array['gameid'] = $v['gameid'];
+            }elseif($v['personastate'] > 0){
+                switch($v['personastate'])
+                {
+                    case 0: $array['state'] = "Offline"; break;
+                    case 1: $array['state'] = "Online"; break;
+                    case 2: $array['state'] = "Busy"; break;
+                    case 3: $array['state'] = "Away"; break;
+                    case 4: $array['state'] = "Snooze"; break;
+                    case 5: $array['state'] = "looking to trade"; break;
+                    case 6: $array['state'] = "looking to play"; break;
+                }
+            }elseif($v['communityvisibilitystate'] == 1){
+                $array['state'] = "Private Profile";
+            }
 		}
 	}
     
+    if($steamid != $array['steam']){
+        LogMessage("SteamID ERROR (".$steamid." : ".$array['steam'].")");
+        return false;
+    }
+
     // Get Badges (level, badges)
     $url = "https://api.steampowered.com/IPlayerService/GetBadges/v1/?key=$apikey&steamid=$steamid";
 
@@ -76,44 +94,18 @@ function UpdateSteamProfiles($database, $apikey, $steamid, $uid)
 	{
 		$array['badges'] = 0;
 		$array['levels'] = $value['player_level'];
-		if($value['player_level'] != null)
-		{
+		if($value['player_level'] != null){
 			foreach($value['badges'] as $k => $v)
 			{
 				$array['badges']++;
 			}
 		}
 	}
-    
-    if($array['online'] == 0){
-		$array['current'] = "OFFLINE";
-		$array['gameid'] = 0;
-	}elseif($array['ingame'] === null){
-		$array['current'] = "ONLINE";
-		$array['gameid'] = 0;
-	}else{
-		$array['current'] = $array['ingame'];
-	}
-    
-    LogMessage("info nick". $array['nick']);
-    LogMessage("info steam". $array['steam']);
-    LogMessage("info avatar". $array['avatar']);
-    LogMessage("info visible". $array['visible']);
-    LogMessage("info ingame". $array['ingame']);
-    LogMessage("info online". $array['online']);
-    LogMessage("info gameid". $array['gameid']);
-    LogMessage("info levels". $array['levels']);
-    LogMessage("info badges". $array['badges']);
-    
-    if($array['gameid'] === null){
-        DB::query("UPDATE " . DB::table('steam_users') . " SET lastupdate = '".time()."' WHERE uid = '".$uid."'");
-        return true;
-    }
 
     $array['nick'] = str_replace(array('&','<','>'),array('&amp;','&lt;','&gt;'), $array['nick']);
 	$array['E_nick'] = mysqli_real_escape_string($database, $array['nick']);
     $array['E_avatar'] = mysqli_real_escape_string($database, $array['avatar']);
-    $array['E_current'] = mysqli_real_escape_string($database, $array['current']);
+    $array['E_current'] = mysqli_real_escape_string($database, $array['state']);
 
     DB::query("UPDATE " . DB::table('steam_users') . " SET lastupdate = '".time()."', steamNickname = '".$array['E_nick']."', level = '".$array['levels']."', badges = '".$array['badges']."', avatar = '".$array['E_avatar']."', current = '".$array['E_current']."', gameid = '".$array['gameid']."' WHERE uid = '".$uid."'");
     return true;
