@@ -66,4 +66,6 @@ if($coinnum < 500){
     }
 }
 
+mysqli_close($database);
+
 ?>

@@ -87,4 +87,6 @@ if($credits < 0 || $coinnum < 0){
     }
 }
 
+mysqli_close($database);
+
 ?>
