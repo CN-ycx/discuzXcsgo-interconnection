@@ -111,4 +111,94 @@ function UpdateSteamProfiles($database, $apikey, $steamid, $uid)
     return true;
 }
 
+// https://github.com/rossengeorgiev/vdf-parser/blob/master/vdf.php
+function KeyValuesToArray($kv)
+{
+    if(!is_string($kv)){
+        trigger_error("parameter is not string!", E_USER_NOTICE);
+        return NULL;
+    }
+
+    if      (substr($kv, 0, 2) == "\xFE\xFF")         $kv = mb_convert_encoding($kv, 'UTF-8', 'UTF-16BE');
+    else if (substr($kv, 0, 2) == "\xFF\xFE")         $kv = mb_convert_encoding($kv, 'UTF-8', 'UTF-16LE');
+    else if (substr($kv, 0, 4) == "\x00\x00\xFE\xFF") $kv = mb_convert_encoding($kv, 'UTF-8', 'UTF-32BE');
+    else if (substr($kv, 0, 4) == "\xFF\xFE\x00\x00") $kv = mb_convert_encoding($kv, 'UTF-8', 'UTF-32LE');
+
+    $kv = preg_replace('/^[\xef\xbb\xbf\xff\xfe\xfe\xff]*/', '', $kv);
+
+    $lines = preg_split('/\n/', $kv);
+
+    $array = array();
+    $stack = array(0=>&$array);
+    $expect_bracket = false;
+    $name = "";
+
+    $re_keyvalue = '~^("(?P<qkey>(?:\\\\.|[^\\\\"])+)"|(?P<key>[a-z0-9\\-\\_]+))' .
+                   '([ \t]*(' .
+                   '"(?P<qval>(?:\\\\.|[^\\\\"])*)(?P<vq_end>")?' .
+                   '|(?P<val>[a-z0-9\\-\\_]+)' .
+                   '))?~iu';
+
+    $j = count($lines);
+    for($i = 0; $i < $j; $i++)
+    {
+        $line = trim($lines[$i]);
+
+        if($line == "" || $line[0] == '/'){
+            continue;
+        }
+
+        if($line[0] == "{"){
+            $expect_bracket = false;
+            continue;
+        }
+
+        if($expect_bracket){
+            trigger_error("invalid syntax, expected a '}' on line " . ($i+1), E_USER_NOTICE);
+            return Null;
+        }
+
+        if($line[0] == "}"){
+            array_pop($stack);
+            continue;
+        }
+
+        while(True)
+        {
+            preg_match($re_keyvalue, $line, $m);
+
+            if(!$m){
+                trigger_error("invalid syntax on line " . ($i+1), E_USER_NOTICE);
+                return NULL;
+            }
+
+            $key = (isset($m['key']) && $m['key'] !== "") ? $m['key'] : $m['qkey'];
+            $val = (isset($m['qval']) && (!isset($m['vq_end']) || $m['vq_end'] !== "")) ? $m['qval'] : (isset($m['val']) ? $m['val'] : False);
+
+            if($val === False){
+                if(!isset($stack[count($stack)-1][$key])){
+                    $stack[count($stack)-1][$key] = array();
+                }
+                $stack[count($stack)] = &$stack[count($stack)-1][$key];
+                $expect_bracket = true;
+            }else{
+                if(!isset($m['vq_end']) && isset($m['qval'])){
+                    $line .= "\n" . $lines[++$i];
+                    continue;
+                }
+
+                $stack[count($stack)-1][$key] = $val;
+            }
+            break;
+        }
+    }
+
+    if(count($stack) !== 1){
+        trigger_error("open parentheses somewhere", E_USER_NOTICE);
+        return NULL;
+    }
+
+    return $array;
+}
+
 ?>

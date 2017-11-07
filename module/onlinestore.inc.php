@@ -110,5 +110,4 @@ if(($result = mysqli_query($database, "SELECT * FROM store_players WHERE authid=
 
     }
 }
-
 ?>
