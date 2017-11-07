@@ -73,38 +73,38 @@
                 <th width="40"><b>购买价格</b></th>
                 <th width="40"><b>执行操作</b></th>
             </tr>
-            <!--{loop $rows $row2}-->
+            <!--{loop $Data_Client $row}-->
             <tr>
                 <td> </td>
-                <td>{$row2['id']}</td>
-                <td>{$row2['type']}</td>
-                <td>{$row2['name']}</td>
-                <td>{$row2['slot']}</td>
-                <td>{$row2['achieve']}</td>
-                <td>{$row2['expired']}</td>
-                <td>{$row2['remaning']}</td>
-                <td>{$row2['price']}</td>
+                <td>{$row['id']}</td>
+                <td>{$row['parent']}</td>
+                <td>{$row['name']}</td>
+                <td>{$row['slot']}</td>
+                <td>{$row['achieve']}</td>
+                <td>{$row['expired']}</td>
+                <td>{$row['remaning']}</td>
+                <td>{$row['price']}</td>
                 <td>
                     <form action="plugin.php" method="get" id="transform">
                         <input type="hidden" name="id" value="interconnection:onlinestore" />
-                        <input type="hidden" name="itemid" id="itemid" value="{$row2[itemid]}" />
+                        <input type="hidden" name="itemid" id="itemid" value="{$row[itemid]}" />
                         <label>
-                            <select name="type" id="type_{$row2[itemid]}">
-                                <!--{if $row2[price_of_purchase] > 1000}-->
+                            <select name="type" id="type_{$row[itemid]}">
+                                <!--{if $row[price_of_purchase] > 1000}-->
                                 <option value="sell">快速卖出</option>
                                 <!--{/if}-->
-                                <!--{if $row2[gift]}-->
+                                <!--{if $row[gift]}-->
                                 <option value="gift">赠送他人</option>
                                 <!--{/if}-->
-                                <!--{if $row2[itemid] > 0}-->
+                                <!--{if $row[itemid] > 0}-->
                                 <option value="dele">删除物品</option>
                                 <!--{else}-->
                                 <option value="none">不可操作</option>
                                 <!--{/if}-->
                             </select>
                         </label>
-                        <!--{if $row2[itemid] > 0}-->
-                        <input type="submit" onclick="javascript:return confirmAction('{$row2[name]}', '$row2[itemid]')" class="pn pnc" value=" 执行 " />
+                        <!--{if $row[itemid] > 0}-->
+                        <input type="submit" onclick="javascript:return confirmAction('{$row[name]}', '$row[itemid]')" class="pn pnc" value=" 执行 " />
                         <!--{else}-->
                         <input type="submit" disabled="disabled" class="pn pnc" value=" 执行 " />
                         <!--{/if}-->
