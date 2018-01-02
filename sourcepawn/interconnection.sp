@@ -252,7 +252,7 @@ public void SQL_UpdateForum(Database db, DBResultSet results, const char[] error
     }
     
     char m_szQuery[256];
-    FormatEx(m_szQuery, 256, "UPDATE `%s_common_member_count` SET threads=threads+1, posts=posts+1 WHERE uid=%d", uid);
+    FormatEx(m_szQuery, 256, "UPDATE `%s_common_member_count` SET threads=threads+1, posts=posts+1 WHERE uid=%d", TABLE_PREFIX, uid);
     g_hDB.Query(SQL_UpdateUser, m_szQuery, pack, DBPrio_High);
 }
 
